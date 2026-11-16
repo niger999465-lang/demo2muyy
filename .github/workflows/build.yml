@@ -14,27 +14,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Locate Project and Build IPA
+      - name: Build App for Generic iOS Device
         run: |
-          echo "Kiểm tra cấu trúc thư mục hiện tại:"
-          ls -la
+          echo "Kiểm tra xem thư mục 3105-1.0.0 có tồn tại không:"
+          ls -la 3105-1.0.0/
 
-          # Tự động tìm thư mục chứa tệp .xcodeproj
-          PROJECT_PATH=$(find . -name "ThreeOneOSFive.xcodeproj" -type d | head -n 1)
-          
-          if [ -z "$PROJECT_PATH" ]; then
-            echo "Lỗi: Không tìm thấy ThreeOneOSFive.xcodeproj trong repository!"
-            exit 1
-          fi
-          
-          echo "Đã tìm thấy project tại: $PROJECT_PATH"
-          PROJECT_DIR=$(dirname "$PROJECT_PATH")
-          
-          # Chuyển vào thư mục chứa project để build
-          cd "$PROJECT_DIR"
-          echo "Thư mục làm việc hiện tại: $(pwd)"
+          # Di chuyển thẳng vào thư mục chứa source code và xcodeproj
+          cd 3105-1.0.0
 
-          # Thực hiện build bằng xcodebuild
+          echo "Thư mục hiện tại đang đứng:"
+          pwd
+
+          # Kiểm tra tệp xcodeproj có ở đây không
+          ls -la ThreeOneOSFive.xcodeproj
+
+          # Chạy lệnh build
           xcodebuild -project ThreeOneOSFive.xcodeproj \
             -scheme ThreeOneOSFive \
             -configuration Release \
@@ -48,12 +42,12 @@ jobs:
           cd build
           zip -r ThreeOneOSFive.ipa Payload
           
-          # Di chuyển tệp .ipa ra thư mục output chung ngoài gốc
-          mkdir -p ../../output
-          mv ThreeOneOSFive.ipa ../../output/
+          # Đưa tệp ipa ra thư mục ngoài để chuẩn bị upload artifact
+          mkdir -p ../output
+          mv ThreeOneOSFive.ipa ../output/
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ThreeOneOSFive-IPA
-          path: output/ThreeOneOSFive.ipa
+          path: 3105-1.0.0/output/ThreeOneOSFive.ipa
