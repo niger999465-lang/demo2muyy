@@ -14,20 +14,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Locate and Build Project
+      - name: Build App for Generic iOS Device
+        working-directory: ./3105-1.0.0
         run: |
-          # Kiểm tra cấu trúc thư mục để debug
-          ls -la
-          
-          # Tìm tệp .xcodeproj xem nó nằm ở thư mục gốc hay thư mục con
-          PROJECT_FILE=$(find . -name "ThreeOneOSFive.xcodeproj" -maxdepth 2)
-          echo "Found project at: $PROJECT_FILE"
-          
-          # Lấy thư mục chứa project
-          PROJECT_DIR=$(dirname "$PROJECT_FILE")
-          cd "$PROJECT_DIR"
-          
-          # Thực hiện build
           xcodebuild -project ThreeOneOSFive.xcodeproj \
             -scheme ThreeOneOSFive \
             -configuration Release \
@@ -47,4 +36,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ThreeOneOSFive-IPA
-          path: output/ThreeOneOSFive.ipa
+          path: 3105-1.0.0/output/ThreeOneOSFive.ipa
+
+          
