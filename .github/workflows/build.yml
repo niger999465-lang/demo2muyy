@@ -14,21 +14,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Show Workspace Files
+        run: |
+          echo "Kiểm tra các tệp ở thư mục gốc:"
+          ls -la
+
       - name: Build App for Generic iOS Device
         run: |
-          echo "Kiểm tra xem thư mục 3105-1.0.0 có tồn tại không:"
-          ls -la 3105-1.0.0/
-
-          # Di chuyển thẳng vào thư mục chứa source code và xcodeproj
-          cd 3105-1.0.0
-
-          echo "Thư mục hiện tại đang đứng:"
-          pwd
-
-          # Kiểm tra tệp xcodeproj có ở đây không
-          ls -la ThreeOneOSFive.xcodeproj
-
-          # Chạy lệnh build
+          # Build trực tiếp tệp xcodeproj tại thư mục gốc
           xcodebuild -project ThreeOneOSFive.xcodeproj \
             -scheme ThreeOneOSFive \
             -configuration Release \
@@ -42,7 +35,6 @@ jobs:
           cd build
           zip -r ThreeOneOSFive.ipa Payload
           
-          # Đưa tệp ipa ra thư mục ngoài để chuẩn bị upload artifact
           mkdir -p ../output
           mv ThreeOneOSFive.ipa ../output/
 
@@ -50,4 +42,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ThreeOneOSFive-IPA
-          path: 3105-1.0.0/output/ThreeOneOSFive.ipa
+          path: output/ThreeOneOSFive.ipa
